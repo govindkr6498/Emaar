@@ -104,9 +104,9 @@ def main():
     """, unsafe_allow_html=True)
 
     # Header
-    st.title("🤖 Omniagent Assistant")
+    st.title("🤖 Profinder Assistant")
     st.markdown("""
-        Welcome to our Omniagent Assistant! I can help you learn more about our products and services.
+        Welcome to our Propfinder Assistant! I can help you learn more about our products and services.
         Feel free to ask any questions!
     """)
 
