@@ -13,7 +13,7 @@ class SalesforceAPI:
         if not self.logger.hasHandlers():
             self.logger.addHandler(handler)
         self.logger.setLevel(logging.INFO)
-        self.auth_url = "https://iqb4-dev-ed.develop.my.salesforce.com/services/oauth2/token"
+        self.auth_url = "https://iquestbeecom-dev-ed.my.salesforce.com/services/oauth2/token"
         self.client_id = os.getenv("SF_CLIENT_ID")
         self.client_secret = os.getenv("SF_CLIENT_SECRET")
         self.access_token = None
@@ -21,7 +21,7 @@ class SalesforceAPI:
         self._authenticate()
 
     def _authenticate(self):
-        self.logger.info("Authenticating with Salesforce...")
+        self.logger.info("Authenticating with Salesforce...Govind 123")
         try:
             auth_data = {"grant_type": "client_credentials", "client_id": self.client_id, "client_secret": self.client_secret}
             response = requests.post(self.auth_url, data=auth_data)
@@ -38,6 +38,7 @@ class SalesforceAPI:
         self.logger.info(f"Creating lead with info: {lead_info}")
         try:
             if not self.access_token or not self.instance_url:
+                print("calling Create Lead Record")
                 self._authenticate()
             if any(value == "N/A" for value in lead_info.values()):
                 self.logger.warning("Lead info contains 'N/A', aborting lead creation.")
@@ -48,7 +49,8 @@ class SalesforceAPI:
                 "LastName": lead_info["Name"],
                 "Company": lead_info["Company"],
                 "Email": lead_info["Email"],
-                "Phone": lead_info["Phone"]
+                "Phone": lead_info["Phone"],
+                "Lead_Source__c":"Aerobot"
             }
             response = requests.post(lead_url, headers=headers, json=sf_lead_payload)
             if response.status_code == 201:
@@ -70,6 +72,7 @@ class SalesforceAPI:
         self.logger.info(f"Creating meeting for lead_id={lead_id} at {start_time_str}")
         try:
             if not self.access_token or not self.instance_url:
+                print("calling Create meeting")
                 self._authenticate()
             event_url = f"{self.instance_url}/services/data/v60.0/sobjects/Event/"
             headers = {"Authorization": f"Bearer {self.access_token}", "Content-Type": "application/json"}
@@ -83,7 +86,7 @@ class SalesforceAPI:
                 "Subject": "Call with Sales Advisor",
                 "StartDateTime": start_utc_dt.isoformat(),
                 "EndDateTime": end_utc_dt.isoformat(),
-                "OwnerId": "0055j00000BYNIBAA5",
+                "OwnerId": "0055i000004KEluAAG",
                 "WhoId": lead_id,
                 "Location": "Virtual Call",
                 "Description": "Scheduled via Agentic Bot"
@@ -104,6 +107,7 @@ class SalesforceAPI:
         start_times = set()
         try:
             if not self.access_token or not self.instance_url:
+                print("calling show_availableMeeting")
                 self._authenticate()
             event_url = f"{self.instance_url}/services/data/v60.0/query?q=SELECT+StartDateTime,+EndDateTime+FROM+Event+WHERE+StartDateTime+=+TODAY"
             headers = {"Authorization": f"Bearer {self.access_token}", "Content-Type": "application/json"}
