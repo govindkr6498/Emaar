@@ -50,7 +50,7 @@ class SalesforceAPI:
                 "Company": lead_info["Company"],
                 "Email": lead_info["Email"],
                 "Phone": lead_info["Phone"],
-                "Lead_Source__c":"Aerobot"
+                "Lead_Source__c":"Propfinder"
             }
             response = requests.post(lead_url, headers=headers, json=sf_lead_payload)
             if response.status_code == 201:
